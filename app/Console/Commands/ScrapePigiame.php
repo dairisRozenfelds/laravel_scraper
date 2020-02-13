@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use Clue\React\Buzz\Browser;
+use App\Scrapers\Pigiame;
+use Exception;
 use Illuminate\Console\Command;
-use React\EventLoop\Factory as LoopFactory;
 
 class ScrapePigiame extends Command
 {
@@ -16,15 +16,15 @@ class ScrapePigiame extends Command
     /**
      * {@inheritdoc}
      */
-    protected $description = 'Command description';
+    protected $description = 'Scrape cars from the the website: ' . Pigiame::WEBSITE_URL;
 
     /**
      * {@inheritdoc}
+     * @throws Exception
      */
     public function handle()
     {
-        $loop = LoopFactory::create();
-        $client = new Browser($loop);
-        $response = $client->get('https://www.pigiame.co.ke/cars');
+        $scraper = new Pigiame();
+        $scraper->beginScrape();
     }
 }
