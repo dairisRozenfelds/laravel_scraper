@@ -77,13 +77,13 @@ class Pigiame implements ScraperInterface
      * Limit for how much entries will be saved
      * @var int
      */
-    protected $entryLimit = 20;
+    protected $entryLimit = 1000;
 
     /**
      * Model insert batch limit
      * @var int
      */
-    protected $entryInsertBatchLimit = 5;
+    protected $entryInsertBatchLimit = 20;
 
     /**
      * @var Browser|null
