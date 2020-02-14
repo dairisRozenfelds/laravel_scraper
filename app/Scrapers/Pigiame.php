@@ -44,24 +44,6 @@ class Pigiame implements ScraperInterface
     ];
 
     /**
-     * Request base delay in seconds
-     * @var float
-     */
-    protected $requestBaseDelay = 0.5;
-
-    /**
-     * Sleep interval from (use INT type numbers)
-     * @var int
-     */
-    protected $randomSleepIntervalFrom = 50;
-
-    /**
-     * Sleep interval to (use INT type numbers)
-     * @var int
-     */
-    protected $randomSleepIntervalTo = 150;
-
-    /**
      * Concurrent request count
      * @var int
      */
@@ -71,7 +53,7 @@ class Pigiame implements ScraperInterface
      * Request timeout in seconds when the request will be ignored if no response is received
      * @var int
      */
-    protected $requestTimeout = 5;
+    protected $requestTimeout = 10;
 
     /**
      * Limit for how much entries will be saved
@@ -146,19 +128,16 @@ class Pigiame implements ScraperInterface
         // Execute the vehicle data fetching
         $this->loop->run();
 
-        $batchCount = 0;
         $vehicleBatchData = [];
 
         // Save vehicle data
         foreach ($this->vehicleData as $vehicleData) {
             $vehicleBatchData[] = $vehicleData;
-            $batchCount++;
 
-            if (($batchCount % $this->entryInsertBatchLimit) === 0) {
+            if ((count($vehicleBatchData) % $this->entryInsertBatchLimit) === 0) {
                 $this->saveVehicleData($vehicleBatchData);
 
                 $vehicleBatchData = [];
-                $batchCount = 0;
             }
         }
 
@@ -225,7 +204,6 @@ class Pigiame implements ScraperInterface
 
             Log::info('Frontpage parsed', ['page_number' => $this->frontpageNumber]);
             $this->frontpageNumber++;
-            $this->randomSleep();
 
             // If the page has result, queue to the next one
             $this->loop->futureTick([$this, 'scrapeFrontPage']);
@@ -320,15 +298,5 @@ class Pigiame implements ScraperInterface
 
         $this->vehicleData[] = $vehicle;
         Log::info('Detailpage parsed', ['vehicle' => $vehicle]);
-    }
-
-    /**
-     * Sleeps for a random time from the defined parameters
-     */
-    protected function randomSleep()
-    {
-        $sleepTime = rand($this->randomSleepIntervalFrom, $this->randomSleepIntervalTo);
-
-        usleep($sleepTime + ($this->requestBaseDelay * 1000000));
     }
 }
