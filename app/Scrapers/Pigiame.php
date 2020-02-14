@@ -91,12 +91,12 @@ class Pigiame implements ScraperInterface
     protected $browserClient;
 
     /**
-     * @var LoopInterface
+     * @var LoopInterface|null
      */
     protected $loop;
 
     /**
-     * @var Queue
+     * @var Queue|null
      */
     protected $queue;
 
@@ -150,7 +150,7 @@ class Pigiame implements ScraperInterface
         $vehicleBatchData = [];
 
         // Save vehicle data
-        foreach ($this->vehicleData as $key => $vehicleData) {
+        foreach ($this->vehicleData as $vehicleData) {
             $vehicleBatchData[] = $vehicleData;
             $batchCount++;
 
@@ -163,7 +163,7 @@ class Pigiame implements ScraperInterface
         }
 
         if (count($vehicleBatchData) > 0) {
-            $this->saveVehicleData($this->vehicleData);
+            $this->saveVehicleData($vehicleBatchData);
         }
     }
 
